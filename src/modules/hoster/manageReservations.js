@@ -1,0 +1,1 @@
+// manageReservations.js placeholder

@@ -1,0 +1,1 @@
+// manageEvents.js placeholder

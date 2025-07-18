@@ -1,0 +1,44 @@
+<div id="registerSection" class="hidden">
+      <h1 class="text-3xl font-bold text-center mb-6">Conviértete en Anfitrión</h1>
+      <form id="hostForm" class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 font-semibold">Nombre</label>
+            <input type="text" id="hostName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold">Ciudad/Pueblo</label>
+            <input type="text" id="hostCity" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold">Descripción de la Familia</label>
+          <textarea id="hostDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold">Foto (URL)</label>
+          <input type="url" id="hostPhoto" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/image.jpg">
+        </div>
+        <div id="plansContainer" class="mb-6">
+          <h2 class="text-xl font-semibold mb-2">Planes de Experiencia</h2>
+          <div class="plan bg-gray-100 p-4 rounded-lg mb-4">
+            <label class="block text-gray-700 font-semibold">Nombre del Plan</label>
+            <input type="text" name="planName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <label class="block text-gray-700 font-semibold mt-2">Descripción (Vivienda, Alimentación, Actividades)</label>
+            <textarea name="planDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" required></textarea>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div>
+                <label class="block text-gray-700 font-semibold">Precio (por persona, en USD)</label>
+                <input type="number" name="planPrice" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required min="0">
+              </div>
+              <div>
+                <label class="block text-gray-700 font-semibold">Duración (días)</label>
+                <input type="number" name="planDuration" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required min="1">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" id="addPlan" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 mb-4">Agregar Otro Plan</button>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 w-full">Registrar</button>
+      </form>
+    </div>

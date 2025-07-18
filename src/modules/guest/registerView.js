@@ -1,0 +1,1 @@
+// registerView.js placeholder

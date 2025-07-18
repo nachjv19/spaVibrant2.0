@@ -1,0 +1,1 @@
+// applyHoster.js placeholder
