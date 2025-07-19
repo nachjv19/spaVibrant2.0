@@ -1,14 +1,59 @@
-<nav class="bg-white shadow-md p-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-blue-600">Vibrant</h1>
-      <div class="space-x-4">
-        <div id="hostPanelSection" class="hidden">
-        <h1 class="text-3xl font-bold text-center mb-6">Panel de Anfitrión</h1>
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
-        <h2 class="text-xl font-semibold mb-4">Tus Reservas Activas</h2>
-        <div id="reservationsList" class="space-y-4">
-        <button id="showHostPanel" class="bg-purple-500 text-white px-4 py-2 rounded-full hover:bg-purple-600">Panel de Anfitrión</button>
-        <button id="showVisitorPanel" class="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600">Mis Reservas</button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel Hoster</title>
+  <script type="module" src="/src/main.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Navbar -->
+  <header id="navbar"></header>
+
+  <main class="max-w-6xl mx-auto p-4 space-y-6">
+
+    <!-- Perfil del Hoster -->
+    <section id="hoster-profile" class="bg-white p-4 rounded-xl shadow">
+      <h2 class="text-xl font-bold mb-2">Mi Perfil</h2>
+      <div id="profile-content" class="space-y-2">
+        <!-- Se renderiza desde JS -->
+      </div>
+    </section>
+
+    <!-- Crear nuevo evento -->
+    <section class="bg-white p-4 rounded-xl shadow">
+      <h2 class="text-xl font-bold mb-2">Crear Nuevo Evento</h2>
+      <form id="create-event-form" class="grid gap-4 md:grid-cols-2">
+        <input type="text" placeholder="Nombre del Evento" id="event-name" class="input" required>
+        <input type="date" id="event-date" class="input" required>
+        <input type="text" placeholder="Ubicación" id="event-location" class="input" required>
+        <input type="number" placeholder="Precio ($)" id="event-price" class="input" required>
+        <textarea placeholder="Descripción" id="event-description" class="input md:col-span-2" required></textarea>
+        <button type="submit" class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 col-span-2">Crear Evento</button>
+      </form>
+    </section>
+
+    <!-- Lista de eventos creados -->
+    <section id="event-list-section" class="bg-white p-4 rounded-xl shadow">
+      <h2 class="text-xl font-bold mb-4">Mis Eventos</h2>
+      <div id="event-list" class="grid gap-4 md:grid-cols-2">
+        <!-- Eventos renderizados con JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl max-w-lg w-full relative">
+      <button id="modal-close" class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl">&times;</button>
+      <div id="modal-content">
+        <!-- Contenido dinámico del modal -->
       </div>
     </div>
-  </nav>
+  </div>
+
+</body>
+</html>

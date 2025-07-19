@@ -1,8 +1,46 @@
-<div id="visitorSection" class="hidden">
-      <h1 class="text-3xl font-bold text-center mb-6">Explora Experiencias Cotidianas</h1>
-      <div class="mb-6">
-        <label class="block text-gray-700 font-semibold mb-2">Filtrar por Ciudad</label>
-        <input type="text" id="cityFilter" class="w-full max-w-md p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe una ciudad...">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bienvenido a Vibrant</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar (renderizado por JS) -->
+  <header id="navbar"></header>
+
+  <!-- Hero Section -->
+  <section class="text-center py-16 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+    <h1 class="text-4xl font-bold mb-4">Explora eventos increíbles</h1>
+    <p class="text-lg mb-6">Únete a nuestra comunidad y reserva tu próximo evento favorito</p>
+    <button id="registerBtn" class="bg-white text-blue-600 font-semibold px-6 py-2 rounded shadow hover:bg-gray-100 transition">
+      Crear cuenta gratis
+    </button>
+  </section>
+
+  <!-- Eventos destacados -->
+  <section class="py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Eventos destacados</h2>
+      <div id="landingEvents" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- Aquí el JS insertará tarjetas de eventos -->
       </div>
-      <div id="hostsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
+  </section>
+
+  <!-- Modal para detalles del evento -->
+<div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 relative">
+    <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-black">&times;</button>
+    <h3 id="modalTitle" class="text-2xl font-bold mb-2"></h3>
+    <p id="modalDescription" class="text-gray-700 mb-4"></p>
+    <p id="modalDate" class="text-sm text-gray-500"></p>
+  </div>
+</div>
+  
+  <main id="app" class="p-4"></main>
+  <script type="module" src="../../guest/landing.js"></script>
+</body>
+</html>

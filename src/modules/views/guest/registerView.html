@@ -1,0 +1,31 @@
+<!-- views/guest/registerView.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro</title>
+  <link rel="stylesheet" href="../../styles/tailwind.css" />
+</head>
+<body class="bg-gray-100">
+
+  <section class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4 text-center">Crear cuenta</h2>
+
+    <form id="registerForm" class="space-y-4">
+      <input type="text" id="name" placeholder="Nombre completo" required class="w-full border p-2 rounded" />
+      <input type="email" id="email" placeholder="Correo electrónico" required class="w-full border p-2 rounded" />
+      <input type="password" id="password" placeholder="Contraseña" required class="w-full border p-2 rounded" />
+      <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required class="w-full border p-2 rounded" />
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Registrarse</button>
+    </form>
+
+    <p class="text-sm text-center mt-4">
+      ¿Ya tienes cuenta? <a href="#/login" class="text-blue-600 hover:underline">Iniciar sesión</a>
+    </p>
+  </section>
+
+  <script type="module" src="../../scripts/guest/register.js"></script>
+</body>
+</html>
