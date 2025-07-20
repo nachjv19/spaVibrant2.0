@@ -1,6 +1,6 @@
-// login.js placeholderimport axios from 'axios';
+import axios from 'axios';
 import { saveSession } from './session.js';
-import { redirectToDashboard } from '../router/router.js';
+import { redirectToDashboard } from '../utils/dashboard.js';
 
 const USERS_API = 'http://localhost:3000/users';
 

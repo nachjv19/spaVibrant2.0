@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": "11a3",
+      "name": "polanco_prueba",
+      "email": "polancotest@test.com",
+      "password": "Polancotest10_",
+      "role": "user",
+      "is_active": true,
+      "create_at": "2025-07-19T22:43:21.862Z",
+      "delete_at": null,
+      "deleted_by": null
+    }
+  ],
+  "hosters": [],
+  "events": [
+    {
+      "id": "1",
+      "name": "Festival de Música 2025",
+      "location": "Bogotá",
+      "date": "2025-08-15",
+      "is_public": true,
+      "image": "https://source.unsplash.com/random/400x200?concert"
+    }
+  ],
+  "reservations": [],
+  "messages": []
+}

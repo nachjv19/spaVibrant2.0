@@ -1,14 +1,30 @@
-// src/modules/landing.js
-import { renderNavbar } from "../../components/navbar";
+// src/modules/views/guest/landing.js
+import { renderNavbar } from "../../components/navbar.js";
 import axios from "axios";
 
 const API_EVENTS_URL = "http://localhost:3000/events";
 
-export function renderLanding() {
-  renderNavbar();
+export async function renderLanding() {
+  await renderNavbar();
+  await cargarVistaHTML(); // Carga el HTML de la vista landing
   cargarEventosDestacados();
   configurarModal();
   configurarBotonRegistro();
+}
+
+async function cargarVistaHTML() {
+  const main = document.getElementById("main-view");
+  if (!main) return;
+
+  try {
+    const res = await axios.get("/src/modules/views/guest/landing.html");
+    const template = document.createElement("template");
+    template.innerHTML = res.data.trim(); // Parseamos a DOM
+    const vista = template.content.cloneNode(true);
+    main.replaceChildren(vista); // Sin innerHTML
+  } catch (error) {
+    console.error("Error cargando landing.html:", error);
+  }
 }
 
 function cargarEventosDestacados() {
@@ -17,7 +33,7 @@ function cargarEventosDestacados() {
 
   axios.get(API_EVENTS_URL)
     .then(res => {
-      const eventos = res.data.slice(0, 6); // Mostrar máximo 6 eventos
+      const eventos = res.data.slice(0, 6);
       eventos.forEach(evento => {
         const card = crearTarjetaEvento(evento);
         contenedor.appendChild(card);

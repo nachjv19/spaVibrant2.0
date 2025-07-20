@@ -1,6 +1,6 @@
 // src/modules/host.js
 import axios from 'axios';
-import { getCurrentUser } from '../../auth/session.js';
+import { getCurrentUser, saveSession } from '../../auth/session.js';
 import { renderNavbar } from '../../components/navbar.js';
 
 export async function initHostForm() {
@@ -8,15 +8,19 @@ export async function initHostForm() {
 
   const hoster = getCurrentUser();
   const app = document.getElementById('app');
-  app.innerHTML = ''; // limpiamos, pero NO usamos innerHTML en la creación
 
   if (!hoster || hoster.role !== 'hoster') {
-    const msg = document.createElement('p');
-    msg.className = 'text-red-500';
-    msg.textContent = 'Acceso no autorizado.';
-    app.appendChild(msg);
+    app.innerHTML = `
+      <div class="text-center p-4">
+        <h2 class="text-xl font-bold">Acceso denegado</h2>
+        <p class="text-gray-600">Debes ser un anfitrión para acceder a esta vista.</p>
+      </div>
+    `;
     return;
   }
+
+  // Limpia solo el contenido visual
+  app.innerHTML = '';
 
   const container = document.createElement('div');
   container.className = 'max-w-xl mx-auto p-4 bg-white rounded-xl shadow';
@@ -80,7 +84,7 @@ export async function initHostForm() {
     try {
       const { status } = await axios.put(`http://localhost:3000/users/${hoster.id}`, updatedHost);
       if (status === 200) {
-        localStorage.setItem('currentUser', JSON.stringify(updatedHost));
+        saveSession(updatedHost);
         alert('Perfil actualizado con éxito');
       } else {
         alert('No se pudo actualizar el perfil');

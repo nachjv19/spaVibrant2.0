@@ -1,6 +1,17 @@
 // src/modules/hoster/ApplyHoster.js
+import axios from 'axios';
+import { getCurrentUser, saveSession } from '../../auth/session.js';
+import { redirectToDashboard } from '../../router/router.js';
+
+const USERS_API = 'http://localhost:3000/users';
+
 export function renderApplyHoster(container) {
-  // Limpia contenedor
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    container.innerHTML = '<p class="text-center text-red-600">Debes iniciar sesión para aplicar como anfitrión.</p>';
+    return;
+  }
+
   container.innerHTML = '';
 
   const section = document.createElement('section');
@@ -17,7 +28,6 @@ export function renderApplyHoster(container) {
   form.className = 'bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto';
   section.appendChild(form);
 
-  // Datos personales
   const grid = document.createElement('div');
   grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-4';
   form.appendChild(grid);
@@ -25,13 +35,9 @@ export function renderApplyHoster(container) {
   grid.appendChild(createInputField('Nombre', 'hostName', 'text'));
   grid.appendChild(createInputField('Ciudad/Pueblo', 'hostCity', 'text'));
 
-  // Descripción
   form.appendChild(createTextAreaField('Descripción de la Familia', 'hostDescription'));
-
-  // Foto
   form.appendChild(createInputField('Foto (URL)', 'hostPhoto', 'url'));
 
-  // Contenedor de planes
   const plansContainer = document.createElement('div');
   plansContainer.id = 'plansContainer';
   plansContainer.className = 'mb-6';
@@ -44,7 +50,6 @@ export function renderApplyHoster(container) {
 
   plansContainer.appendChild(createPlanFields());
 
-  // Botón agregar plan
   const addPlanBtn = document.createElement('button');
   addPlanBtn.type = 'button';
   addPlanBtn.id = 'addPlan';
@@ -56,24 +61,46 @@ export function renderApplyHoster(container) {
     plansContainer.appendChild(createPlanFields());
   });
 
-  // Botón enviar
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
   submitBtn.textContent = 'Registrar';
   submitBtn.className = 'bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 w-full';
   form.appendChild(submitBtn);
 
-  // Listener para submit
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para enviar los datos a JSON Server
-    console.log('Formulario enviado');
+
+    // 🔍 Obtener los datos del form
+    const updatedUser = {
+      ...currentUser,
+      role: 'hoster',
+      name: form.hostName.value,
+      city: form.hostCity.value,
+      photo: form.hostPhoto.value,
+      bio: form.hostDescription.value,
+      plans: getPlansData(),
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      const { status } = await axios.put(`${USERS_API}/${currentUser.id}`, updatedUser);
+      if (status === 200) {
+        saveSession(updatedUser);
+        alert('¡Ahora eres anfitrión!');
+        redirectToDashboard('hoster');
+      } else {
+        alert('No se pudo registrar como anfitrión.');
+      }
+    } catch (err) {
+      console.error('Error al guardar perfil de anfitrión:', err);
+      alert('Hubo un error al enviar el formulario.');
+    }
   });
 
   container.appendChild(section);
 }
 
-// 🔧 Helpers
+// Helpers
 function createInputField(labelText, id, type = 'text') {
   const wrapper = document.createElement('div');
 
@@ -129,4 +156,20 @@ function createPlanFields() {
   planWrapper.appendChild(grid);
 
   return planWrapper;
+}
+
+// 🔍 Recoge todos los planes del DOM
+function getPlansData() {
+  const plans = [];
+  document.querySelectorAll('.plan').forEach(planEl => {
+    const name = planEl.querySelector('#planName').value;
+    const description = planEl.querySelector('#planDescription').value;
+    const price = parseFloat(planEl.querySelector('#planPrice').value);
+    const duration = parseInt(planEl.querySelector('#planDuration').value);
+
+    if (name && description && price > 0 && duration > 0) {
+      plans.push({ name, description, price, duration });
+    }
+  });
+  return plans;
 }

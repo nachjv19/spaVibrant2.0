@@ -1,142 +1,67 @@
 // src/router/router.js
-import { getCurrentUser } from '../auth/session.js';
-import { renderNavbar } from '../components/navbar.js';
-
-// Admin'
-import { renderManageEvents } from '../modules/admin/manageEvents.js';
-import { renderManageReservations } from '../modules/admin/manageReservations.js';
-import { renderManageUsers } from '../modules/admin/manageUsers.js';
-
-// Hoster
-import { renderHosterDashboard } from '../modules/hoster/hosterDashboard.js';
-
-// User
-import { renderUserDashboard } from '../modules/user/userDashboard.js';
-
-// Guest
-import { renderLanding } from '../modules/guest/landing.js';
 import { renderLogin } from '../auth/login.js';
 import { renderRegister } from '../auth/register.js';
+import { renderNavbar } from '../components/navbar.js';
+import { getCurrentUser } from '../auth/session.js';
 
-export function initRouter() {
-  window.addEventListener('hashchange', loadView);
-  loadView();
-}
+// Importaciones de vistas por rol
+import { renderAdminDashboard } from '../modules/admin/adminDashboard.js';
+import { renderUserDashboard } from '../modules/user/userDashboard.js';
+import { renderHosterDashboard } from '../modules/hoster/hosterDashboard.js';
 
-function loadView() {
-  const route = window.location.hash || '#/';
+// Vista pública o de bienvenida
+import { renderLanding } from '../modules/guest/landing.js';
+
+const routes = {
+  '/': renderLanding,
+  '/login': renderLogin,
+  '/register': renderRegister,
+  '/admin': renderAdminDashboard,
+  '/user': renderUserDashboard,
+  '/hoster': renderHosterDashboard
+};
+
+export function router() {
+  const path = location.hash.slice(1) || '/';
+  const view = routes[path];
+
   const user = getCurrentUser();
+  renderNavbar();
 
-  const publicRoutes = [
-    '#/',
-    '#/landing',
-    '#/login',
-    '#/register',
-  ];
+  // Protección de rutas privadas
+  if (['/admin', '/user', '/hoster'].includes(path)) {
+    if (!user) {
+      alert('Primero inicia sesión');
+      window.location.href = '#/login';
+      return;
+    }
 
-  const routes = {
-    admin: ['#/admin-products', '#/admin-events', '#/admin-reservations', '#/admin-users'],
-    hoster: ['#/hoster-dashboard'],
-    user: ['#/user-dashboard'],
-  };
+    if (path === '/admin' && user.role !== 'admin') {
+      alert('Acceso denegado (solo admins)');
+      window.location.href = '#/';
+      return;
+    }
 
-  const allPrivateRoutes = Object.values(routes).flat();
-  const role = user?.role;
+    if (path === '/user' && user.role !== 'user') {
+      alert('Acceso denegado (solo usuarios)');
+      window.location.href = '#/';
+      return;
+    }
 
-  // ⛔ Ruta privada sin login
-  if (allPrivateRoutes.includes(route) && (!user || !user.is_active)) {
-    window.location.hash = '#/login';
-    return;
+    if (path === '/hoster' && user.role !== 'hoster') {
+      alert('Acceso denegado (solo anfitriones)');
+      window.location.href = '#/';
+      return;
+    }
   }
 
-  // ⛔ Ruta sin permiso del rol
-  if (!publicRoutes.includes(route) && user && !routes[role]?.includes(route)) {
-    window.location.hash = '#/unauthorized';
-    return;
-  }
-
-  renderNavbar(); // navbar universal
-
-  switch (route) {
-    // 🟢 Público
-    case '#/':
-      renderLanding();
-      break;
-
-    case '#/landing':
-      if (user && user.is_active) {
-        // Redireccionar a dashboard según rol
-        const dashboardByRole = {
-          admin: '#/admin-products',
-          hoster: '#/hoster-dashboard',
-          user: '#/user-dashboard',
-        };
-        window.location.hash = dashboardByRole[user.role] || '#/';
-      } else {
-        import('../modules/guest/landing.js').then(mod => mod.renderLanding());
-      }
-      break;
-
-    case '#/login':
-      renderLogin();
-      break;
-
-    case '#/register':
-      renderRegister();
-      break;
-
-    // 🔒 Admin
-    case '#/admin-events':
-      renderManageEvents();
-      break;
-    case '#/admin-reservations':
-      renderManageReservations();
-      break;
-    case '#/admin-users':
-      renderManageUsers();
-      break;
-
-    // 🔒 Hoster
-    case '#/hoster-dashboard':
-      renderHosterDashboard();
-      break;
-
-    // 🔒 Usuario
-    case '#/user-dashboard':
-      renderUserDashboard();
-      break;
-
-    // ❌ Ruta no autorizada
-    case '#/unauthorized':
-      document.getElementById('app').innerHTML = `
-        <section class="p-6 text-center text-red-600">
-          <h2 class="text-2xl font-bold">Acceso denegado</h2>
-          <p>No tienes permisos para acceder a esta página.</p>
-        </section>
-      `;
-      break;
-
-    default:
-      document.getElementById('app').innerHTML = `
-        <section class="p-6 text-center text-gray-500">
-          <h2 class="text-xl font-bold">404</h2>
-          <p>Página no encontrada.</p>
-        </section>
-      `;
-      break;
-  }
+  if (view) view();
+  else document.getElementById('app').innerHTML = '<h2>Página no encontrada</h2>';
 }
 
-export function redirectToDashboard() {
-  const user = JSON.parse(localStorage.getItem('currentUser'));
-  if (!user) return;
+// Inicializa el router
+export function initRouter(){
 
-  if (user.rol === 'admin') {
-    window.location.hash = '#/admin-dashboard';
-  } else if (user.rol === 'hoster') {
-    window.location.hash = '#/hoster-dashboard';
-  } else {
-    window.location.hash = '#/visitor-dashboard';
-  }
+  window.addEventListener('hashchange', router);
+  window.addEventListener('DOMContentLoaded', router);
 }
-
